@@ -8,11 +8,15 @@ using UnityEditor;
 #endif
 public class UIManager : MonoBehaviour
 {
+    public void Start()
+    {
+        DataManager.instance.pName = "NoName";
+    }
     public void SetName(string Name)
     {
         if (!string.IsNullOrEmpty(Name))
         {
-            DataManager.instance.pName = Name;   
+            DataManager.instance.pName = Name;
         }
     }
     public void StartGame()

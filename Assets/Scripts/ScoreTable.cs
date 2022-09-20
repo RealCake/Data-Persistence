@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ScoreTable : MonoBehaviour
 {
@@ -17,24 +18,36 @@ public class ScoreTable : MonoBehaviour
         template.gameObject.SetActive(false);
 
         string jsonHS = PlayerPrefs.GetString("Highscore");
-        ListObj ListObj = JsonUtility.FromJson<ListObj>(jsonHS);
+        ListObj listObj = JsonUtility.FromJson<ListObj>(jsonHS);
 
-        for (int i = 0; i < ListObj.listRef.Count; i++) {
-            for (int j = i+1; j < ListObj.listRef.Count; j++) {
-                if (ListObj.listRef[j].score > ListObj.listRef[i].score) {
-                    HighScore tmp = ListObj.listRef[i];
-                    ListObj.listRef[i] = ListObj.listRef[j];
-                    ListObj.listRef[j] = tmp;
+        for (int i = 0; i < listObj.listRef.Count; i++) {
+            for (int j = i+1; j < listObj.listRef.Count; j++) {
+                if (listObj.listRef[j].name == listObj.listRef[i].name)
+                {
+                    Debug.Log("Yas");
+
+                    if (listObj.listRef[j].score > listObj.listRef[i].score)
+                    {
+                        listObj.listRef[i] = listObj.listRef[j];
+                        listObj.listRef.Remove(listObj.listRef[j]);
+                    }
                 }
+                if (listObj.listRef[j].score > listObj.listRef[i].score)
+                {
+                    HighScore tmp = listObj.listRef[i];
+                    listObj.listRef[i] = listObj.listRef[j];
+                    listObj.listRef[j] = tmp;
+                }
+                
             }
         }
 
-        foreach (HighScore data in ListObj.listRef)
+        foreach (HighScore data in listObj.listRef)
         {
             CreateHighscore(data, container, transformList);
         }
     }
-    private void CreateHighscore(HighScore data, Transform container, List<Transform> transformList)
+    public void CreateHighscore(HighScore data, Transform container, List<Transform> transformList)
     {
         float templateHeight = 18;
         Transform transform = Instantiate(template, container);
@@ -58,7 +71,7 @@ public class ScoreTable : MonoBehaviour
         transform.Find("Name").GetComponent<TextMeshProUGUI>().text = name;
         transformList.Add(transform);
     }
-    public void AddHighscore(int score,string name)
+    public static void AddHighscore(int score,string name)
     {
         HighScore newScore = new HighScore { score = score, name = name };
         string jsonFW = PlayerPrefs.GetString("Highscore");
@@ -68,9 +81,17 @@ public class ScoreTable : MonoBehaviour
         PlayerPrefs.SetString("Highscore", jsonFR);
         PlayerPrefs.Save();
     }
+    public void EraseScore()
+    {
+        ListObj emptylistObj = new ListObj();
+        PlayerPrefs.SetString("Highscore", new string (JsonUtility.ToJson(emptylistObj)));
+        PlayerPrefs.Save();
+        SceneManager.LoadScene("MainMenu");
+
+    }
 
     [System.Serializable]
-    private class HighScore
+    public class HighScore
     {
         public int score;
         public string name;

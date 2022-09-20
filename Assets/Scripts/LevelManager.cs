@@ -14,11 +14,10 @@ public class LevelManager : MonoBehaviour
     public GameObject GameOverText;
     
     private bool m_Started = false;
-    public int m_Points;
-    public string pName = DataManager.instance.pName;
+    private int m_Points;
 
     private bool m_GameOver = false;
-
+    
     void Start()
     {
         const float step = 0.6f;
@@ -75,8 +74,9 @@ public class LevelManager : MonoBehaviour
 
     public void GameOver()
     {
+        ScoreTable.AddHighscore(m_Points, DataManager.instance.pName);
+
         m_GameOver = true;
-        ScoreTable.AddHighscore(m_Points, pName);
         GameOverText.SetActive(true);
     }
 }

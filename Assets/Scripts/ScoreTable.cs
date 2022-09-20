@@ -22,7 +22,7 @@ public class ScoreTable : MonoBehaviour
 
         for (int i = 0; i < listObj.listRef.Count; i++) {
             for (int j = i+1; j < listObj.listRef.Count; j++) {
-                if (listObj.listRef[j].name == listObj.listRef[i].name)
+                /*if (listObj.listRef[j].name == listObj.listRef[i].name)
                 {
                     Debug.Log("Yas");
 
@@ -31,7 +31,7 @@ public class ScoreTable : MonoBehaviour
                         listObj.listRef[i] = listObj.listRef[j];
                         listObj.listRef.Remove(listObj.listRef[j]);
                     }
-                }
+                }*/
                 if (listObj.listRef[j].score > listObj.listRef[i].score)
                 {
                     HighScore tmp = listObj.listRef[i];
